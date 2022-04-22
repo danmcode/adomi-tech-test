@@ -31,5 +31,10 @@ class AppTheme {
       backgroundColor: adomiYellow,
       elevation: 0,
     ),
+
+    appBarTheme: const AppBarTheme(
+      elevation: 0,
+      backgroundColor: adomiGreen,
+    ),
   );
 }

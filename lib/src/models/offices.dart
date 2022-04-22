@@ -2,6 +2,7 @@
 //
 //     final offices = officesFromMap(jsonString);
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
@@ -51,8 +52,8 @@ class OfficeInfo {
     @required this.hasPickup,
     @required this.isComingSoon,
     @required this.joinName,
-    @required this.latitude,
-    @required this.longitude,
+    this.latitude = 0.0,
+    this.longitude = 0.0,
     @required this.isWorking,
     @required this.isDemo,
     @required this.branchofficeType,
@@ -60,12 +61,12 @@ class OfficeInfo {
     @required this.isDevelop,
     @required this.coverageRadio,
     @required this.isFeatured,
-    @required this.brand,
+    this.brand,
     @required this.isFavoriteBranchOffice,
     @required this.isOpen,
     @required this.message,
     @required this.estimatedDeliveryTime,
-    @required this.distanceKm,
+    this.distanceKm = 0.0,
   });
 
   String? id;
@@ -79,8 +80,8 @@ class OfficeInfo {
   bool? hasPickup;
   bool? isComingSoon;
   bool? joinName;
-  double? latitude;
-  double? longitude;
+  double latitude;
+  double longitude;
   bool? isWorking;
   bool? isDemo;
   BranchofficeType? branchofficeType;
@@ -93,7 +94,7 @@ class OfficeInfo {
   bool? isOpen;
   String? message;
   EstimatedDeliveryTime? estimatedDeliveryTime;
-  double? distanceKm;
+  double distanceKm;
 
   factory OfficeInfo.fromMap(Map<String, dynamic> json) => OfficeInfo(
         id: json["id"],
@@ -107,8 +108,9 @@ class OfficeInfo {
         hasPickup: json["has_pickup"],
         isComingSoon: json["is_coming_soon"],
         joinName: json["join_name"],
-        latitude: json["latitude"].toDouble(),
-        longitude: json["longitude"].toDouble(),
+        latitude: json["latitude"] != null ? json["latitude"].toDouble() : 0.0,
+        longitude:
+            json["longitude"] != null ? json["longitude"].toDouble() : 0.0,
         isWorking: json["is_working"],
         isDemo: json["is_demo"],
         branchofficeType: branchofficeTypeValues.map[json["branchoffice_type"]],
@@ -116,13 +118,17 @@ class OfficeInfo {
         isDevelop: json["is_develop"],
         coverageRadio: json["coverage_radio"],
         isFeatured: json["is_featured"],
-        brand: Brand.fromMap(json["brand"]),
+        brand: json["brand"] != null
+            ? Brand.fromMap(json["brand"])
+            : Brand.fromMap({}),
         isFavoriteBranchOffice: json["is_favorite_branch_office"],
         isOpen: json["is_open"],
         message: json["message"],
-        estimatedDeliveryTime:
-            EstimatedDeliveryTime.fromMap(json["estimated_delivery_time"]),
-        distanceKm: json["distance_km"].toDouble(),
+        estimatedDeliveryTime: json["estimated_delivery_time"] != null
+            ? EstimatedDeliveryTime.fromMap(json["estimated_delivery_time"])
+            : EstimatedDeliveryTime.fromMap({}),
+        distanceKm:
+            json["distance_km"] != null ? json["distance_km"].toDouble() : 0.0,
       );
 
   Map<String, dynamic> toMap() => {
@@ -153,6 +159,8 @@ class OfficeInfo {
         "estimated_delivery_time": estimatedDeliveryTime?.toMap(),
         "distance_km": distanceKm,
       };
+
+  LatLng getLatLng() => LatLng(latitude, longitude);
 }
 
 enum BranchofficeType { RESTAURANTS }
@@ -162,25 +170,25 @@ final branchofficeTypeValues =
 
 class Brand {
   Brand({
-    @required this.logo,
-    @required this.id,
-    @required this.name,
-    @required this.isAvailable,
-    @required this.description,
+    this.logo = '',
+    this.id = '',
+    this.name = '',
+    this.isAvailable = false,
+    this.description = '',
   });
 
-  String? logo;
-  String? id;
-  String? name;
-  bool? isAvailable;
-  String? description;
+  String logo;
+  String id;
+  String name;
+  bool isAvailable;
+  String description;
 
   factory Brand.fromMap(Map<String, dynamic> json) => Brand(
-        logo: json["logo"],
-        id: json["id"],
-        name: json["name"],
-        isAvailable: json["is_available"],
-        description: json["description"],
+        logo: json["logo"] ?? '',
+        id: json["id"] ?? '',
+        name: json["name"] ?? '',
+        isAvailable: json["is_available"] ?? false,
+        description: json["description"] ?? '',
       );
 
   Map<String, dynamic> toMap() => {
@@ -208,8 +216,10 @@ class EstimatedDeliveryTime {
 
   factory EstimatedDeliveryTime.fromMap(Map<String, dynamic> json) =>
       EstimatedDeliveryTime(
-        from: From.fromMap(json["from"]),
-        to: From.fromMap(json["to"]),
+        from: json["from"] != null
+            ? From.fromMap(json["from"])
+            : From.fromMap({}),
+        to: json["to"] != null ? From.fromMap(json["to"]) : From.fromMap({}),
       );
 
   Map<String, dynamic> toMap() => {

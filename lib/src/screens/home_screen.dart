@@ -1,3 +1,4 @@
+import 'package:adomi_app/src/models/models.dart';
 import 'package:adomi_app/src/providers/providers.dart';
 import 'package:adomi_app/src/screens/list_places_screen.dart';
 import 'package:adomi_app/src/services/office_service.dart';
@@ -11,7 +12,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final officeService = Provider.of<OfficeService>(context);
     //Initial point
     const LatLng latLgnInitial = LatLng(4.545367057195659, -76.09435558319092);
     const CameraPosition initialPoint = CameraPosition(
@@ -29,6 +29,12 @@ class HomeScreen extends StatelessWidget {
         position: latLgnInitial,
       ),
     );
+
+    // markers.add(
+    //   Marker(
+    //     markerId: MarkerId(),
+    //   ),
+    // );
 
     return Scaffold(
       body: _HomeBody(initialPoint: initialPoint, markers: markers),

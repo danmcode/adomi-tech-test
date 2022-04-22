@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:adomi_app/src/models/models.dart';
 import 'package:adomi_app/src/utils/env.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,16 +13,16 @@ class OfficeService extends ChangeNotifier {
   final String _lng = '-76.09435558319092';
   final String _coverageRadio = 'true';
 
-  final List<OfficeInfo> officesInfo = [];
+  List<OfficeInfo> officesInfo = [];
+  late OfficeInfo officceSelected;
 
   bool isloading = true;
-  bool isSaving = false;
 
   OfficeService() {
     loadOffices();
   }
 
-  Future loadOffices() async {
+  Future<List<OfficeInfo>?> loadOffices() async {
     isloading = true;
     notifyListeners();
 
@@ -35,6 +37,21 @@ class OfficeService extends ChangeNotifier {
       'coverage_radio': _coverageRadio,
     });
 
-    print(response.body);
+    //Decode response
+    try {
+      final Map<String, dynamic> decodeResp = json.decode(response.body);
+      if (decodeResp["code"] == 200) {
+        List<dynamic> officeInfoData = decodeResp["data"] as List;
+
+        officesInfo =
+            (officeInfoData).map((e) => OfficeInfo.fromMap(e)).toList();
+
+        return officesInfo;
+      }
+    } catch (e) {
+      // print('=========');
+      // print(e);
+      return [];
+    }
   }
 }
